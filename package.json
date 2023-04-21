@@ -1,0 +1,33 @@
+{
+  "name": "consulta-consulado-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wayaba/consulta-consulado-api.git"
+  },
+  "keywords": [],
+  "engines": {
+    "node": "14.x"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wayaba/consulta-consulado-api/issues"
+  },
+  "homepage": "https://github.com/wayaba/consulta-consulado-api#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "chrome-aws-lambda": "10.1.0",
+    "puppeteer-core": "10.1.0"
+  },
+  "devDependencies": {
+    "puppeteer": "^19.10.1"
+  }
+}
