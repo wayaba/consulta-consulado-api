@@ -2,7 +2,61 @@
 
 Esta api hace el scrapping de la página del Consulado de España ( https://www.cgeonline.com.ar/informacion/apertura-de-citas.html )
 
-Por ahora solo hay un metodo digamos para obtener la fecha de renovacion de pasaportes.
+La forma de pegarle a la api para traer la lista de apertura de citas es la siguiente
+
+```
+https://consulta-consulado-api.vercel.app/apertura-citas
+```
+
+El response tiene este formato
+
+```
+[
+	{
+		"service": "Carnet de conducir",
+		"lastOpening": "x",
+		"nextOpening": "primer día hábil de cada semana a las 11:00",
+		"requestLink": "https://www.cgeonline.com.ar/tramites/citas/varios/cita-varios.html?t=11"
+	},
+	{
+		"service": "Certificado de antecedentes penales",
+		"lastOpening": "x",
+		"nextOpening": "primer día hábil de cada semana a las 11:00",
+		"requestLink": "https://www.cgeonline.com.ar/tramites/citas/varios/cita-varios.html?t=2"
+	},
+	{
+		"service": "Certificado electrónico o digital",
+		"lastOpening": "x",
+		"nextOpening": "primer día hábil de cada semana a las 11:00",
+		"requestLink": "https://www.cgeonline.com.ar/tramites/citas/varios/cita-varios.html?t=3"
+	},
+	{
+		"service": "Fe de vida",
+		"lastOpening": "x",
+		"nextOpening": "primer día hábil de cada semana a las 11:00",
+		"requestLink": "https://www.cgeonline.com.ar/tramites/citas/varios/cita-varios.html?t=5"
+	},
+	{
+		"service": "Legalización de documentos",
+		"lastOpening": "x",
+		"nextOpening": "primer día hábil de cada semana a las 11:00",
+		"requestLink": "https://www.cgeonline.com.ar/tramites/citas/varios/cita-varios.html?t=1"
+	},
+	{
+		"service": "NIE (Número de identidad de extranjeros)",
+		"lastOpening": "x",
+		"nextOpening": "primer día hábil de cada semana a las 11:00",
+		"requestLink": "https://www.cgeonline.com.ar/tramites/citas/varios/cita-varios.html?t=7"
+	},
+	{
+		"service": "NIF (Número de identificación fiscal)",
+		"lastOpening": "x",
+		"nextOpening": "x",
+		"requestLink": "mailto:cog.buenosaires.not@maec.es"
+	},
+  ...
+]
+```
 
 Aca esta la explicacion de como deployar un proyecto de express con puppeteer en Vercel
 
