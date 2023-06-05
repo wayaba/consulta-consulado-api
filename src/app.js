@@ -1,6 +1,4 @@
 const express = require('express')
-const edgeChromium = require('chrome-aws-lambda')
-const puppeteer = require('puppeteer-core')
 
 const LOCAL_CHROME_EXECUTABLE =
   'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
@@ -44,10 +42,13 @@ app.get('/apertura-citas', async (req, res) => {
         return { service, lastOpening, nextOpening, requestLink }
       })
     })
+
+    //cierro la conexion al navegador
+    await browser.close()
+
     res.send(output)
   } catch (err) {
-    console.error(err)
-    res.status(500).send('Error en la automatización del navegador')
+    res.status(500).send('Error en la automatización del navegador', err)
   }
 })
 
