@@ -6,6 +6,7 @@ const LOCAL_CHROME_EXECUTABLE =
   'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
 
 const cors = require('cors')
+const { chromium } = require('playwright')
 
 const app = express()
 
@@ -20,58 +21,30 @@ app.get('/apertura-citas', async (req, res) => {
   try {
     const PAGE_URL = `https://www.cgeonline.com.ar/informacion/apertura-de-citas.html`
 
-    const executablePath =
-      (await edgeChromium.executablePath) || LOCAL_CHROME_EXECUTABLE
-
-    const browser = await puppeteer.launch({
-      executablePath,
-      args: edgeChromium.args,
-      headless: false
-    })
+    //headless para que no se abra el navegador
+    const browser = await chromium.launch({ headless: true })
 
     const page = await browser.newPage()
 
     await page.goto(PAGE_URL)
-    await page.waitForSelector('table')
 
-    const rows = await page.$$('table tr')
+    const output = await page.$$eval('table > tbody tr', (rows) => {
+      return rows.map((row) => {
+        const cells = Array.from(row.querySelectorAll('td'))
 
-    let tableRows = []
-    for (const row of rows) {
-      const columns = await row.$$('td')
-      if (columns.length > 0) {
-        const requestLinkText = await page.evaluate(
-          (col) => col.textContent.trim(),
-          columns[3]
-        )
-        let requestLink = ''
-        if (
-          requestLinkText === 'solicitar' ||
-          requestLinkText.includes('correo')
-        ) {
-          const aLink = await columns[3].$('a')
-          requestLink = await page.evaluate((a) => a.href, aLink)
-        }
+        let [service, lastOpening, nextOpening, requestLink] = cells
+        service = service ? service.textContent.trim() : service
+        lastOpening = lastOpening ? lastOpening.textContent.trim() : lastOpening
+        nextOpening = nextOpening ? nextOpening.textContent.trim() : nextOpening
+        requestLink = requestLink.querySelector('a').getAttribute('href')
 
-        if (columns[3])
-          tableRows.push({
-            service: await page.evaluate(
-              (col) => col.textContent.trim(),
-              columns[0]
-            ),
-            lastOpening: await page.evaluate(
-              (col) => col.textContent.trim(),
-              columns[1]
-            ),
-            nextOpening: await page.evaluate(
-              (col) => col.textContent.trim(),
-              columns[2]
-            ),
-            requestLink: requestLink
-          })
-      }
-    }
-    res.send(tableRows)
+        if (!requestLink.includes('mailto:'))
+          requestLink = 'https://www.cgeonline.com.ar' + requestLink
+
+        return { service, lastOpening, nextOpening, requestLink }
+      })
+    })
+    res.send(output)
   } catch (err) {
     console.error(err)
     res.status(500).send('Error en la automatización del navegador')
