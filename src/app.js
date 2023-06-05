@@ -1,10 +1,12 @@
 const express = require('express')
+const edgeChromium = require('chrome-aws-lambda')
+const puppeteer = require('puppeteer-core')
+//const { chromium } = require('playwright')
 
 const LOCAL_CHROME_EXECUTABLE =
   'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
 
 const cors = require('cors')
-const { chromium } = require('playwright')
 
 const app = express()
 
@@ -19,9 +21,17 @@ app.get('/apertura-citas', async (req, res) => {
   try {
     const PAGE_URL = `https://www.cgeonline.com.ar/informacion/apertura-de-citas.html`
 
-    //headless para que no se abra el navegador
-    const browser = await chromium.launch({ headless: true })
+    const executablePath =
+      (await edgeChromium.executablePath) || LOCAL_CHROME_EXECUTABLE
 
+    //headless para que no se abra el navegador
+    //const browser = await chromium.launch({ headless: true })
+
+    const browser = await puppeteer.launch({
+      executablePath,
+      args: edgeChromium.args,
+      headless: true
+    })
     const page = await browser.newPage()
 
     await page.goto(PAGE_URL)
@@ -48,7 +58,8 @@ app.get('/apertura-citas', async (req, res) => {
 
     res.send(output)
   } catch (err) {
-    res.status(500).send('Error en la automatización del navegador', err)
+    const status = err.status || 500
+    res.status(status).send('Error en la automatización del navegador', err)
   }
 })
 
